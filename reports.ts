@@ -45,9 +45,13 @@ const formatReport = (report: AreaResult[]) => {
 };
 
 export const startNotification = async () => {
-  await axios.post(`${process.env.SLACK_WEBHOOK_URL}`, {
-    text: "*Starting report*",
-  });
+  try {
+    await axios.post(`${process.env.SLACK_WEBHOOK_URL}`, {
+      text: "*Starting report*",
+    });
+  } catch (e) {
+    console.log("Error starting notification", e);
+  }
 };
 
 export const sendReport = async (report: AreaResult[]) => {
