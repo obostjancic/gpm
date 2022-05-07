@@ -1,5 +1,6 @@
 import { test } from "@playwright/test";
 import { extractAvailableDays, fillEndDate, fillStartDate, proceed, selectAnyArea, switchToArea } from "../helpers";
+import { sendReport } from "../reports";
 import { AreaResult, mergeResults, numOfDaysAvailable, splitIntoNumAndLocation, text, toString } from "../utils";
 
 test("basic test", async ({ page }) => {
@@ -10,9 +11,9 @@ test("basic test", async ({ page }) => {
     const july = await checkAllAreas(new Date("07-01-2022"), new Date("07-31-2022"));
     const august = await checkAllAreas(new Date("08-01-2022"), new Date("08-31-2022"));
     const september = await checkAllAreas(new Date("09-01-2022"), new Date("09-30-2022"));
-    const october = await checkAllAreas(new Date("10-01-2022"), new Date("10-31-2022"));
+    // const october = await checkAllAreas(new Date("10-01-2022"), new Date("10-31-2022"));
 
-    return mergeResults([june, july, august, september, october]);
+    return mergeResults([june, july, august, september]);
   };
 
   const checkAllAreas = async (from: Date, to: Date) => {
@@ -53,5 +54,6 @@ test("basic test", async ({ page }) => {
     };
   };
 
-  console.log(JSON.stringify(await checkAll()));
+  const results = await checkAll();
+  await sendReport(results);
 });
