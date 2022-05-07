@@ -47,7 +47,7 @@ const formatReport = (report: AreaResult[]) => {
 export const sendReport = async (report: AreaResult[]) => {
   const formattedReport = formatReport(report);
 
-  await axios.post("https://hooks.slack.com/services/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", {
+  await axios.post("https://hooks.slack.com/services/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", {
     blocks: [
       {
         type: "section",
