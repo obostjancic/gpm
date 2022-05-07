@@ -51,16 +51,6 @@ const getHook = () => {
   return `https://${domain}/services/${hookId}`;
 };
 
-export const startNotification = async () => {
-  try {
-    await axios.post(getHook(), {
-      text: "*Starting report*",
-    });
-  } catch (e) {
-    console.log("Error starting notification", e);
-  }
-};
-
 export const sendReport = async (report: AreaResult[]) => {
   const formattedReport = formatReport(report);
 
