@@ -1,6 +1,6 @@
 import { test } from "@playwright/test";
 import { extractAvailableDays, fillEndDate, fillStartDate, proceed, selectAnyArea, switchToArea } from "../helpers";
-import { sendReport } from "../reports";
+import { sendReport, startNotification } from "../reports";
 import { AreaResult, mergeResults, numOfDaysAvailable, splitIntoNumAndLocation, text, toString } from "../utils";
 
 test("basic test", async ({ page }) => {
@@ -53,7 +53,7 @@ test("basic test", async ({ page }) => {
       availableDays: availableDaysStr,
     };
   };
-
+  await startNotification();
   const results = await checkAll();
   await sendReport(results);
 });
