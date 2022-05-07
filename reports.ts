@@ -46,7 +46,7 @@ const formatReport = (report: AreaResult[]) => {
 
 export const startNotification = async () => {
   try {
-    await axios.post(`${process.env.SLACK_WEBHOOK_URL}`, {
+    await axios.post(`https://hooks.slack.com/services/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`, {
       text: "*Starting report*",
     });
   } catch (e) {
@@ -57,7 +57,7 @@ export const startNotification = async () => {
 export const sendReport = async (report: AreaResult[]) => {
   const formattedReport = formatReport(report);
 
-  await axios.post(`${process.env.SLACK_WEBHOOK_URL}`, {
+  await axios.post(`https://hooks.slack.com/services/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`, {
     blocks: [
       {
         type: "section",
