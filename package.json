@@ -1,0 +1,19 @@
+{
+  "name": "gpm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx playwright test gpm --headed",
+    "start:headless": "npx playwright test gpm"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.21.1"
+  },
+  "dependencies": {
+    "date-fns": "^2.28.0"
+  }
+}
