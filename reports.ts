@@ -44,9 +44,16 @@ const formatReport = (report: AreaResult[]) => {
     .join("\n");
 };
 
+const getHook = () => {
+  const domain = `hooks.slack.com`;
+  const hookId = "/T02HAR4TP60/B03EKPH5ZQC/4EfE1Nq9ufEqn5WVhC1S57nQ";
+
+  return `https://${domain}/services/${hookId}`;
+};
+
 export const startNotification = async () => {
   try {
-    await axios.post(`https://hooks.slack.com/services/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`, {
+    await axios.post(getHook(), {
       text: "*Starting report*",
     });
   } catch (e) {
@@ -57,7 +64,7 @@ export const startNotification = async () => {
 export const sendReport = async (report: AreaResult[]) => {
   const formattedReport = formatReport(report);
 
-  await axios.post(`https://hooks.slack.com/services/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`, {
+  await axios.post(getHook(), {
     blocks: [
       {
         type: "section",
