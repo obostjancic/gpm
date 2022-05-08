@@ -55,14 +55,14 @@ export const sendReport = async (report: AreaResult[]) => {
   const formattedReport = formatReport(report);
 
   await axios.post(getHook(), {
+    type: "section",
+    text: {
+      type: "plain_text",
+      text: getFirstAvailableDay(report),
+    },
+  });
+  await axios.post(getHook(), {
     blocks: [
-      {
-        type: "section",
-        text: {
-          type: "plain_text",
-          text: getFirstAvailableDay(report),
-        },
-      },
       {
         type: "actions",
         elements: [
