@@ -5,7 +5,7 @@ import { AreaResult, mergeResults, numOfDaysAvailable, splitIntoNumAndLocation, 
 
 test("basic test", async ({ page }) => {
   test.setTimeout(300000);
-  console.log(process.env);
+
   const checkAll = async () => {
     const june = await checkAllAreas(new Date(), new Date("06-30-2022"));
     const july = await checkAllAreas(new Date("07-01-2022"), new Date("07-31-2022"));

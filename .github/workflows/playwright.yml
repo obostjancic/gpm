@@ -19,6 +19,8 @@ jobs:
         run: npx playwright install chromium --with-deps
       - name: Run Playwright tests
         run: npx playwright test
+        env:
+          SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
       - uses: actions/upload-artifact@v2
         if: always()
         with:
