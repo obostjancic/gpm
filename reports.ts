@@ -45,10 +45,7 @@ const formatReport = (report: AreaResult[]) => {
 };
 
 const getHook = () => {
-  const domain = `hooks.slack.com`;
-  const hookId = "/T02HAR4TP60/B03EKPH5ZQC/4EfE1Nq9ufEqn5WVhC1S57nQ";
-
-  return `https://${domain}/services/${hookId}`;
+  return process.env.SLACK_WEBHOOK_URL;
 };
 
 export const sendReport = async (report: AreaResult[]) => {
