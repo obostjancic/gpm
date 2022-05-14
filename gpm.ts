@@ -1,19 +1,35 @@
-import { test } from "@playwright/test";
-import { extractAvailableDays, fillEndDate, fillStartDate, proceed, selectAnyArea, switchToArea } from "../helpers";
-import { sendReport } from "../reports";
-import { AreaResult, mergeResults, numOfDaysAvailable, splitIntoNumAndLocation, text, toString } from "../utils";
+import { Page } from "@playwright/test";
+import { extractAvailableDays, fillEndDate, fillStartDate, proceed, selectAnyArea, switchToArea } from "./helpers";
+import { sendReport } from "./reports";
+import {
+  AreaResult,
+  datesForMonth,
+  mergeResults,
+  numOfDaysAvailable,
+  splitIntoNumAndLocation,
+  text,
+  toString,
+} from "./utils";
 
-test("basic test", async ({ page }) => {
-  test.setTimeout(300000);
+export type Month = "june" | "july" | "august" | "september" | "october";
+export type NotificationLevel = "debug" | "info";
+export type GPMConfig = {
+  months: Month[];
+  notificationLevel: NotificationLevel;
+  page: Page;
+};
 
+export const gpm = async ({ months, notificationLevel, page }: GPMConfig) => {
   const checkAll = async () => {
-    const june = await checkAllAreas(new Date(), new Date("06-30-2022"));
-    const july = await checkAllAreas(new Date("07-01-2022"), new Date("07-31-2022"));
-    const august = await checkAllAreas(new Date("08-01-2022"), new Date("08-31-2022"));
-    const september = await checkAllAreas(new Date("09-01-2022"), new Date("09-30-2022"));
-    const october = await checkAllAreas(new Date("10-01-2022"), new Date("10-31-2022"));
+    const results = [];
 
-    return mergeResults([june, july, august, september, october]);
+    for (const month of months) {
+      const { from, to } = datesForMonth(month);
+      const areaResults = await checkAllAreas(from, to);
+      results.push(areaResults);
+    }
+
+    return mergeResults(results);
   };
 
   const checkAllAreas = async (from: Date, to: Date) => {
@@ -55,5 +71,5 @@ test("basic test", async ({ page }) => {
   };
 
   const results = await checkAll();
-  await sendReport(results);
-});
+  await sendReport(results, notificationLevel);
+};

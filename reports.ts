@@ -1,32 +1,16 @@
-import { format } from "date-fns";
-import { AreaResult } from "./utils";
+import {
+  AreaResult,
+  firstDays,
+  getFirstAvailableDate,
+  getFirstAvailableDateText,
+  padLeft,
+  padRight,
+  shortNum,
+  shoe,
+  shortDate,
+} from "./utils";
 import axios from "axios";
-
-const shortDate = (date: Date) => {
-  return padLeft(format(new Date(date), "EEE - dd.MMM "), 13);
-};
-
-const firstDays = (dates: Date[]) => {
-  return dates.slice(0, 3).map(shortDate);
-};
-
-const shortNum = (areaNum: string) => {
-  return areaNum.replace(/^Nummer /, "No. ");
-};
-
-const padLeft = (str: string, length: number = 6, pad: string = " "): string => {
-  return str.length >= length ? str : padLeft(pad + str, length, pad);
-};
-
-const padRight = (str: string, length: number = 6, pad: string = " "): string => {
-  return str.length >= length ? str : padRight(str + pad, length, pad);
-};
-
-const getFirstAvailableDay = (report: AreaResult[]) => {
-  const dates = report.map(area => new Date(area.availableDays?.[0]));
-  if (dates.length) return `First available date: ${shortDate(dates.sort((a, b) => a.getTime() - b.getTime())[0])}`;
-  return "No dates available";
-};
+import { NotificationLevel } from "./gpm";
 
 const formatReport = (report: AreaResult[]) => {
   const rows = report.map(area => {
@@ -44,17 +28,8 @@ const formatReport = (report: AreaResult[]) => {
     .join("\n");
 };
 
-const getHook = () => {
-  return process.env.SLACK_WEBHOOK_URL;
-};
-
-export const sendReport = async (report: AreaResult[]) => {
-  const formattedReport = formatReport(report);
-
-  await axios.post(getHook(), {
-    text: getFirstAvailableDay(report),
-  });
-  await axios.post(getHook(), {
+const slackMessageBody = (formattedReport: string) => {
+  return {
     blocks: [
       {
         type: "actions",
@@ -79,5 +54,26 @@ export const sendReport = async (report: AreaResult[]) => {
         },
       },
     ],
-  });
+  };
+};
+
+const getHook = () => {
+  return process.env.SLACK_WEBHOOK_URL;
+};
+
+export const sendReport = async (report: AreaResult[], notificationLevel: NotificationLevel) => {
+  if (notificationLevel === "info") {
+    const availableDate = getFirstAvailableDate(report);
+    if (availableDate) {
+      await axios.post(getHook(), {
+        text: `DATE FOUND!!! ${shortDate(availableDate)}`,
+      });
+    }
+  }
+  if (notificationLevel === "debug") {
+    await axios.post(getHook(), {
+      text: getFirstAvailableDateText(report),
+    });
+    await axios.post(getHook(), slackMessageBody(formatReport(report)));
+  }
 };

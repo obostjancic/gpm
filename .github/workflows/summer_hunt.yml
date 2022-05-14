@@ -1,12 +1,12 @@
-name: Playwright Tests
+name: Summer hunt
 on:
   schedule:
-    - cron: "7 * * * *"
+    - cron: "*/7 * * * *"
   workflow_dispatch:
 
 jobs:
   test:
-    timeout-minutes: 10
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,7 +18,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install chromium --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test summer
         env:
           SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
       - uses: actions/upload-artifact@v2
